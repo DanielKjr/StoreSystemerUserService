@@ -39,7 +39,7 @@
 
   <ItemGroup>
     <Reference Include="EF-InteractionFrameworkCore">
-      <HintPath>..\..\..\..\StoreSystemerEksamen\EF-InteractionFrameworkCore.dll</HintPath>
+      <HintPath>..\UserService\EF-InteractionFrameworkCore.dll</HintPath>
     </Reference>
   </ItemGroup>
 
