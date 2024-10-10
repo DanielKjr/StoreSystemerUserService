@@ -53,21 +53,19 @@ namespace UserService.Services
 
 		public async Task<bool> AddItemsToUser(Guid id, List<Item> stuff)
 		{
-			bool succes = _repositoryPatch.AddItemsToUser<User, Item>(q => q.Where(x => x.Id == id).Include(i => i.Inventory).Include(i => i.Inventory.Items), null, stuff).IsCompleted;
+			bool succes = _repositoryPatch.AddItemsToUser<User, Item>(q => q.Where(x => x.Id == id).Include(i => i.Inventory).Include(i => i.Inventory.Items), null!, stuff).IsCompleted;
 			return await Task.FromResult(succes);
 		}
 
 		public async Task<bool> AddItemToUser(Guid id, Item item)
 		{
-			bool succes = _repositoryPatch.AddItemsToUser<User, Item>(q => q.Where(x => x.Id == id).Include(i => i.Inventory.Items), item, null).IsCompleted;
+			bool succes = _repositoryPatch.AddItemsToUser<User, Item>(q => q.Where(x => x.Id == id).Include(i => i.Inventory.Items), item, null!).IsCompleted;
 			return await Task.FromResult(succes);
 		}
 
 		public async Task<bool> UpdateUser(User user)
 		{
-			var oldUser = _repository.GetItem<User>(q => q.Where(x => x.Id == user.Id).Include(i => i.Inventory.Items)).Result;
-			oldUser = user;
-			return await Task.FromResult(_repository.UpdateItem(user).IsCompletedSuccessfully);
+			return await Task.FromResult(_repositoryPatch.UpdateUser(user).IsCompletedSuccessfully);
 		}
 
 		public async Task<User> GetUserByName(string username)

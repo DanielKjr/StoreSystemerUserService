@@ -15,9 +15,6 @@ namespace UserServiceUnitTests
 		private ServiceProvider _serviceProvider;
 		private FakeUser user;
 		private List<FakeUser> users;
-		//private IRepositoryPatch<FakeContext> _repositoryPatch;
-		//private IAsyncRepository<UserContext> _repoFactory () => GetRepo();
-
 
 		[SetUp]
 		public void Setup()
@@ -27,6 +24,8 @@ namespace UserServiceUnitTests
 			users = CreateUsers();
 
 		}
+
+
 		[TearDownAttribute]
 		public async Task Dispose()
 		{
@@ -69,22 +68,11 @@ namespace UserServiceUnitTests
 
 			using var scope = _serviceProvider.CreateScope();
 			var _repository = scope.ServiceProvider.GetRequiredService<IAsyncRepository<FakeContext>>();
-			// Act
-
+		
 			await _repository.AddItem(user);
-
-			//Assert
 			var result = await _repository.GetItem<FakeUser>(q => q.Where(x => x.Username == user.Username).Include(x => x.Inventory).Include(c => c.Inventory.Items));
-
-			//var context = scope.ServiceProvider.GetService<UserContext>();
-
-
-
 			That(result != null);
-			That(result.Inventory.Items.First().Name == "Some item");
-			//That(context == null);
-
-
+			That(result!.Inventory.Items.First().Name == "Some item");
 		}
 
 		[Test]
@@ -107,14 +95,11 @@ namespace UserServiceUnitTests
 			using var scope = _serviceProvider.CreateScope();
 			var _repository = scope.ServiceProvider.GetRequiredService<IAsyncRepository<FakeContext>>();
 			await _repository.AddItem(user);
-
-
 			var addedItem = await _repository.GetItem<FakeUser>(q => q.Where(x => x.Id == user.Id));
 			That(addedItem != null);
-			//Act
+
 			await _repository.RemoveItem(user);
 
-			//Assert
 			var result = await _repository.GetItem<FakeUser>(q => q.Where(x => x.Id == user.Id));
 			That(result == null);
 
@@ -176,11 +161,8 @@ namespace UserServiceUnitTests
 			using var scope = _serviceProvider.CreateScope();
 			var _repository = scope.ServiceProvider.GetRequiredService<IAsyncRepository<FakeContext>>();
 
-
-			// Act
 			await _repository.AddItem(user);
 
-			//Assert
 			var result = await _repository.GetItem<FakeUser>(q => q.Where(x => x.Id == user.Id));
 			That(result?.Username, Is.EqualTo("something"));
 
@@ -199,8 +181,6 @@ namespace UserServiceUnitTests
 
 			That(result?.Username, Is.EqualTo("something"));
 			That(result?.Inventory.Id == user.Inventory.Id);
-
-
 		}
 
 
@@ -249,15 +229,12 @@ namespace UserServiceUnitTests
 			List<string> result = await _repository.GetAllForColumn<FakeUser, string>(x => x.Select(s => s.Username)!);
 			List<int> test2Result = await _repository.GetAllForColumnStruct<FakeUser, int>(x => x.Select(s => s.StructvalueForTest));
 			That(result.Count == users.Count());
-			//That(test2Result.Count == users.Count() && test2Result.First() == 0);
 		}
 
 
 		[Test]
 		public async Task CanUpdateItem()
 		{
-
-			//TODO det er her jeg kom til
 			using var scope = _serviceProvider.CreateScope();
 			var repository = scope.ServiceProvider.GetRequiredService<IAsyncRepository<FakeContext>>();
 
@@ -275,8 +252,6 @@ namespace UserServiceUnitTests
 		public async Task CanUpdateMultipleItems()
 		{
 			var users = CreateUsers();
-
-
 			using var scope = _serviceProvider.CreateScope();
 			var repository = scope.ServiceProvider.GetRequiredService<IAsyncRepository<FakeContext>>();
 
@@ -288,7 +263,6 @@ namespace UserServiceUnitTests
 				item.StructvalueForTest = 4;
 			}
 
-			//retrievesUsers.ForEach(async x => await _repositoryPatch.AddItemsToUser<FakeUser, FakeItem>(q => q.Where(c => c.Id == x.Id).Include(i => i.Inventory.Items), x.Inventory.Items.First(), null));
 			await repository.UpdateItems(retrievesUsers);
 			var result = await repository.GetAllItems<FakeUser>(q => q.Include(i => i.Inventory.Items));
 			That(result.TrueForAll(x => x.StructvalueForTest == 4));

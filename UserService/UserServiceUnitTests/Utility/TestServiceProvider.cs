@@ -30,7 +30,6 @@ namespace UserServiceUnitTests.Utility
 			services.AddDbContextFactory<TContext>(options =>
 				options.UseInMemoryDatabase($"TestDatabase_{randomName}"));
 
-			// If TContext is UserContext, add dummy IConfiguration
 			if (typeof(TContext) == typeof(UserContext))
 			{
 				// dummy configuration 

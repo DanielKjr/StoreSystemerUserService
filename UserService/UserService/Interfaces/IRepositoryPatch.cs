@@ -24,7 +24,7 @@ namespace UserService.Interfaces
 		/// <param name="entity"></param>
 		/// <returns></returns>
 		Task AddItemsToUser<TEntity, TCollection>(Func<IQueryable<TEntity>, IQueryable<TEntity>> queryOperation, TCollection entity, List<TCollection> list) where TEntity : User where TCollection : Item;
-
+		Task<bool> UpdateUser(User user);
 
 
 	}

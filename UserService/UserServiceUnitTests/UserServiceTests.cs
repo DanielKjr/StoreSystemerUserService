@@ -10,6 +10,7 @@ using UserService.Context;
 using UserService.DTOs;
 using UserService.Interfaces;
 using UserService.Models;
+using UserService.Repository;
 using UserService.Services;
 using UserServiceUnitTests.Utility;
 using static NUnit.Framework.Assert;
@@ -23,19 +24,22 @@ namespace UserServiceUnitTests
 		private UserDTO userDto;
 		private List<UserDTO> usersToAdd;
 		private IUserService _userService;
+	
 
 
 		public UserServiceTests()
 		{
+#if DEBUG
 			var secretFilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../../secret.txt"));
 
 			// Set the environment variable
 			Environment.SetEnvironmentVariable("secretPath", secretFilePath);
+#endif
 			user = new User() { Username = "something", Password = "password" };
 			user.Inventory.Items.Add(new Item() { Name = "Some item", Price = 50 });
 			userDto = new UserDTO() { Username = user.Username, Password = user.Password };
 			usersToAdd = new List<UserDTO>();
-
+			
 			for (int i = 0; i < 10; i++)
 			{
 				usersToAdd.Add(new UserDTO() { Username = $"user{i}", Password = $"password{i}" });
@@ -154,12 +158,13 @@ namespace UserServiceUnitTests
 		[Test]
 		public async Task CanUpdateUsersItem()
 		{
+			
 			await _userService.CreateUser(userDto);
 			var retrievedUser = await _userService.GetUserByName(user.Username);
 
 			var item = new Item() { Name = "Some item2", Price = 50 };
-
-			await _userService.AddItemToUser(retrievedUser.Id, item);
+		
+			await _userService.AddItemToUser(retrievedUser.Id , item);
 			var retrievedUserToUpdate = await _userService.GetUserByName(user.Username);
 
 			var itemToUpdate = retrievedUserToUpdate.Inventory.Items.First();
@@ -168,7 +173,7 @@ namespace UserServiceUnitTests
 
 			var finalUser = await _userService.GetUserByName(user.Username);
 			That(finalUser != null);
-			That(finalUser.Inventory.Items.Count == 1);
+			That(finalUser!.Inventory.Items.Count == 1);
 			That(finalUser.Inventory.Items.First().Name == "Some other item");
 		}
 
@@ -189,7 +194,7 @@ namespace UserServiceUnitTests
 			var retrievedUser = await _userService.GetUserById(id);
 
 			That(retrievedUser != null);
-			That(id == retrievedUser.Id);
+			That(id == retrievedUser!.Id);
 		}
 
 		[Test]
