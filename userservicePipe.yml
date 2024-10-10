@@ -37,9 +37,4 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-# Copy the secret file if needed
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(Agent.TempDirectory)'
-    Contents: 'secret.txt'
-    TargetFolder: '$(Build.SourcesDirectory)'  # Adjust path as needed
+
