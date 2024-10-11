@@ -29,7 +29,7 @@ using (var scope = app.Services.CreateScope())
 	var services = scope.ServiceProvider;
 	var context = services.GetRequiredService<UserContext>();
 
-	context.Database.EnsureCreated();
+	await context.Database.EnsureCreatedAsync();
 }
 
 // Configure the HTTP request pipeline.
