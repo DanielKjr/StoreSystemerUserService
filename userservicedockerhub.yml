@@ -12,9 +12,12 @@ steps:
   inputs:
     containerRegistry: 'Docker'
     command: 'login'
+    repository: 'userservice'
+    
 - task: Docker@2
   inputs:
     containerRegistry: 'Docker'
     repository: 'userservice'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
+
