@@ -5,7 +5,8 @@ resources:
 - repo: self
 
 variables:
-  tag: "danielkjr/userservice:latest"  # Use the full repository name with your Docker Hub username
+  imageName: "danielkjr/userservice"  # Correct repository with Docker Hub username
+  tag: "latest"  # Define tag separately
 
 steps:
 
@@ -13,7 +14,7 @@ steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'Docker'  # Your registered Docker Hub service connection
-    repository: 'danielkjr/userservice'  # Specify the correct repository with your Docker Hub username
+    repository: '$(imageName)'  # Reference the correct image name
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
-    tags: '$(tag)'  # Use the variable to tag the image correctly
+    tags: '$(imageName):$(tag)'  # Correctly tag the image
