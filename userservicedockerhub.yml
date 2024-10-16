@@ -31,5 +31,5 @@ stages:
       displayName: Push to docker
       inputs:
        containerRegistry: 'Docker'
-       repository: 'userservice'
+       repository: 'UserService'
        command: 'push'
