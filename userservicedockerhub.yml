@@ -1,0 +1,21 @@
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  dockerUsername: "danielkjr"  # Your Docker Hub username
+  imageName: "$(dockerUsername)/userservice"  # Correct repository with Docker Hub username
+  tag: "latest"  # Define the tag (e.g., 'latest')
+
+steps:
+
+# Step 1: Build and Push the Docker image
+- task: Docker@2
+  inputs:
+    containerRegistry: 'Docker'  # Your registered Docker Hub service connection
+    repository: '$(imageName)'  # Correct repository path
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    tags: '$(tag)'  # Correctly tag the image
