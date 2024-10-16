@@ -5,7 +5,7 @@ resources:
 - repo: self
 
 variables:
-  tag: 'latest'  # Ensure it's a valid tag (which it is)
+  tag: 'latest'  # Using a valid tag
 
 stages:
 - stage: Build
@@ -22,13 +22,13 @@ stages:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/UserService/UserService/Dockerfile'
         tags: |
-          userservice:$(tag)  # Tagging the image correctly
-        
+          userservice:$(tag)  # Correctly tagging the image as userservice:latest
+
     - task: Docker@2
       displayName: Push to docker
       inputs:
-        containerRegistry: 'Docker'  # Ensure this is your service connection name
-        repository: 'userservice'    # Ensure it's lowercase and valid
+        containerRegistry: 'Docker'  # Ensure this is your Docker service connection name
+        repository: 'userservice'    # The repository name should match what you tagged the image as
         command: 'push'
         tags: |
-          userservice:$(tag)  # Pushing the same tagged image
+          userservice:$(tag)  # Pushing the correct image userservice:latest
