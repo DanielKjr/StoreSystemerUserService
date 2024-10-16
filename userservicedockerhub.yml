@@ -5,15 +5,9 @@ resources:
 - repo: self
 
 variables:
-  tag: "userservice:latest"  # Using a valid tag
+  tag: "danielkjr/userservice:latest"  # Using a valid tag
 
 steps:
-- task: Docker@2
-  inputs:
-    containerRegistry: 'Docker'
-    command: 'login'
-    repository: 'userservice'
-    
 - task: Docker@2
   inputs:
     containerRegistry: 'Docker'
