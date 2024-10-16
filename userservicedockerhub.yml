@@ -5,7 +5,7 @@ resources:
 - repo: self
 
 variables:
-  tag: "latest"  # Using a valid tag
+  tag: "userservice:latest"  # Using a valid tag
 
 steps:
 - task: Docker@2
