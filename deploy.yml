@@ -1,7 +1,7 @@
 jobs:
   - job: Deploy
     pool:
-      name: Self-Hosted
+      name: Kubedeployment
     steps:
       - script: |
           docker pull danielkjr/userservice:$(Build.SourceVersion)
