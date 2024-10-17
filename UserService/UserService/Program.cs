@@ -1,4 +1,5 @@
 using EF_InteractionFrameworkCore;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using UserService.Context;
 using UserService.Interfaces;
 using UserService.Repository;
@@ -13,6 +14,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHealthChecks().AddCheck<ReadinessHealthCheck>("readiness");
+
 //Named the repo the name I wanted for this (((: 
 builder.Services.AddTransient<IUserService, UserServiceProvider>();
 builder.Services.AddSingleton<IJwtProvider, JwtProvider>();
@@ -23,6 +26,11 @@ builder.Services.AddTransient<IRepositoryPatch<UserContext>, RepositoryPatch<Use
 builder.Services.AddDbContextFactory<UserContext>();
 
 var app = builder.Build();
+
+app.MapHealthChecks("/healthz/readiness", new HealthCheckOptions
+{
+    Predicate = (check) => check.Name == "readiness"
+});
 
 using (var scope = app.Services.CreateScope())
 {
