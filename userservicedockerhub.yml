@@ -7,8 +7,7 @@ resources:
 variables:
   dockerUsername: "danielkjr"  # Your Docker Hub username
   imageName: "$(dockerUsername)/userservice"  # Correct repository with Docker Hub username
-  tag: "latest"  # Define the tag (e.g., 'latest')
-
+  tag: '$(Build.SourceVersion)'
 steps:
 
 # Step 1: Build and Push the Docker image
