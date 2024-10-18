@@ -38,15 +38,15 @@ namespace UserService.Controllers
 
 		[HttpPost]
 		[Route("login")]
-		public IActionResult Login([FromBody] UserDTO user)
+		public async Task<string> Login([FromBody] UserDTO user)
 		{
-			return Ok(_userService.Login(user));
+			return await Task.FromResult(await _userService.Login(user));
 		}
 
 		[HttpPatch("addItems/{id}")]
-		public IActionResult AddItems(Guid id, [FromBody] List<Item> stuff)
+		public Task AddItems(Guid id, [FromBody] List<Item> stuff)
 		{
-			return Ok(_userService.AddItemsToUser(id, stuff));
+			return _userService.AddItemsToUser(id, stuff);
 		}
 
 
