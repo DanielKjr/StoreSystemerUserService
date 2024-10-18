@@ -19,7 +19,7 @@ namespace UserService.Services
 
 			List<Claim> claims = new List<Claim>
 			{
-				new Claim(ClaimTypes.Name, user.GetType().GetProperty("Username")!.Name)
+				new Claim(ClaimTypes.Name, user.GetType().GetProperty("Username")?.GetValue(user, null) as string)
 			};
 
 			var secretPath = Environment.GetEnvironmentVariable("secretPath");
@@ -35,7 +35,7 @@ namespace UserService.Services
 				claims: claims,
 				expires: DateTime.Now.AddHours(5),
 				signingCredentials: creds,
-				issuer: "http://LoginService"
+				issuer: "http://UserService"
 				);
 
 			var jwt = new JwtSecurityTokenHandler().WriteToken(token);
