@@ -49,8 +49,15 @@ namespace UserService.Controllers
 			return _userService.AddItemsToUser(id, stuff);
 		}
 
+        [HttpPatch("removeItem/{itemId}")]
+        public Task RemoveItem(Guid itemId)
+        {
+            return _userService.RemoveItem(itemId);
+        }
 
-		[HttpDelete("delete/{id}")]
+
+
+        [HttpDelete("delete/{id}")]
 		public async Task DeleteUser(Guid id)
 		{
 			await _userService.DeleteUser(id);
