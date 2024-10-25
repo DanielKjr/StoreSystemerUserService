@@ -29,12 +29,11 @@ namespace UserServiceUnitTests
 
 		public UserServiceTests()
 		{
-#if DEBUG
 			var secretFilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../../secret.txt"));
 
 			// Set the environment variable
 			Environment.SetEnvironmentVariable("secretPath", secretFilePath);
-#endif
+
 			user = new User() { Username = "something", Password = "password" };
 			user.Inventory.Items.Add(new Item() { Name = "Some item", Price = 50 });
 			userDto = new UserDTO() { Username = user.Username, Password = user.Password };
@@ -55,8 +54,6 @@ namespace UserServiceUnitTests
 			var _jwtProvider = new JwtProvider();
 			var _repositoryPatch = _serviceProvider.GetRequiredService<IRepositoryPatch<UserContext>>();
 			_userService = new UserServiceProvider(_repository, _jwtProvider, _repositoryPatch);
-
-
 		}
 
 
