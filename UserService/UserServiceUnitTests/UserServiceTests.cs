@@ -34,6 +34,7 @@ namespace UserServiceUnitTests
 
 			// Set the environment variable
 			Environment.SetEnvironmentVariable("secretPath", secretFilePath);
+
 #endif
 			user = new User() { Username = "something", Password = "password" };
 			user.Inventory.Items.Add(new Item() { Name = "Some item", Price = 50 });
@@ -55,8 +56,6 @@ namespace UserServiceUnitTests
 			var _jwtProvider = new JwtProvider();
 			var _repositoryPatch = _serviceProvider.GetRequiredService<IRepositoryPatch<UserContext>>();
 			_userService = new UserServiceProvider(_repository, _jwtProvider, _repositoryPatch);
-
-
 		}
 
 
@@ -153,6 +152,26 @@ namespace UserServiceUnitTests
 
 			That(retrievedUser != null);
 			That(retrievedUserAfter.Inventory.Items.Count == 1);
+		}
+
+		[Test]
+		public async Task CanRemoveItemFromUser()
+		{
+			await _userService.CreateUser(userDto);
+			var retrievedUser = await _userService.GetUserByName(user.Username);
+
+			var item = new Item() { Name = "Some item2", Price = 50 };
+
+			await _userService.AddItemToUser(retrievedUser.Id, item);
+			var retrievedUserAfter = await _userService.GetUserByName(user.Username);
+			That(retrievedUser != null);
+			That(retrievedUserAfter.Inventory.Items.Count == 1);
+
+			var removedSuccesfully = await _userService.RemoveItem(retrievedUserAfter.Inventory.Items.First().Id);
+			var retrievedUserAfterRemove = await _userService.GetUserByName(user.Username);
+
+			That(retrievedUserAfterRemove.Inventory.Items.Count == 0);
+			That(removedSuccesfully);
 		}
 
 		[Test]
