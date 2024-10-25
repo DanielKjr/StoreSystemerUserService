@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Newtonsoft.Json;
 
-class LoadTester
+class Endpointspam
 {
 	private static readonly HttpClient client = new HttpClient();
 
