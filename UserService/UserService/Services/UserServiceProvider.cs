@@ -57,7 +57,13 @@ namespace UserService.Services
 			return await Task.FromResult(succes);
 		}
 
-		public async Task<bool> AddItemToUser(Guid id, Item item)
+        public async Task<bool> RemoveItem(Guid itemId)
+        {
+            bool success = _repository.RemoveItem<Item>(x => x.Id == itemId).IsCompleted;
+			return await Task.FromResult(success);
+        }
+
+        public async Task<bool> AddItemToUser(Guid id, Item item)
 		{
 			bool succes = _repositoryPatch.AddItemsToUser<User, Item>(q => q.Where(x => x.Id == id).Include(i => i.Inventory.Items), item, null!).IsCompleted;
 			return await Task.FromResult(succes);
