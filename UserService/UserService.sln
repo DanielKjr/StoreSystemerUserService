@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService", "UserService\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserServiceUnitTests", "UserServiceUnitTests\UserServiceUnitTests.csproj", "{B21F2027-61AF-4F09-AF8F-3F077EBA4CD8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Endpointspam", "LoadTest\Endpointspam.csproj", "{43C6E4CE-A663-4BCE-97A0-12FF4025433F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Endpointspam", "Endpointspam\Endpointspam.csproj", "{43C6E4CE-A663-4BCE-97A0-12FF4025433F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
