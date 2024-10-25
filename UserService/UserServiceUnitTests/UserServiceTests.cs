@@ -153,6 +153,26 @@ namespace UserServiceUnitTests
 		}
 
 		[Test]
+		public async Task CanRemoveItemFromUser()
+		{
+			await _userService.CreateUser(userDto);
+			var retrievedUser = await _userService.GetUserByName(user.Username);
+
+			var item = new Item() { Name = "Some item2", Price = 50 };
+
+			await _userService.AddItemToUser(retrievedUser.Id, item);
+			var retrievedUserAfter = await _userService.GetUserByName(user.Username);
+			That(retrievedUser != null);
+			That(retrievedUserAfter.Inventory.Items.Count == 1);
+
+			var removedSuccesfully = await _userService.RemoveItem(retrievedUserAfter.Inventory.Items.First().Id);
+			var retrievedUserAfterRemove = await _userService.GetUserByName(user.Username);
+
+			That(retrievedUserAfterRemove.Inventory.Items.Count == 0);
+			That(removedSuccesfully);
+		}
+
+		[Test]
 		public async Task CanUpdateUsersItem()
 		{
 			

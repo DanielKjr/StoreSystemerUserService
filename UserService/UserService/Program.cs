@@ -1,5 +1,7 @@
 using EF_InteractionFrameworkCore;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 using UserService.Context;
 using UserService.Interfaces;
 using UserService.Repository;
@@ -24,6 +26,39 @@ builder.Services.AddTransientAsyncRepository<UserContext>();
 builder.Services.AddTransient<IRepositoryPatch<UserContext>, RepositoryPatch<UserContext>>();
 
 builder.Services.AddDbContextFactory<UserContext>();
+
+
+builder.Services.AddRateLimiter(options =>
+{
+	options.AddFixedWindowLimiter("fixedLogin", config =>
+	{
+		config.PermitLimit = 6;  
+		config.Window = TimeSpan.FromSeconds(30);
+		config.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+		
+	});
+	options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+	options.OnRejected = async (context, _) =>
+	{
+		await context.HttpContext.Response.WriteAsync("too many login attempts, please try again later");
+	};
+});
+
+builder.Services.AddRateLimiter(options =>
+{
+	options.AddFixedWindowLimiter("fixedUsercreation", config =>
+	{
+		config.PermitLimit = 1;
+		config.Window = TimeSpan.FromMinutes(60);
+		config.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+
+	});
+	options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+	options.OnRejected = async (context, _) =>
+	{
+		await context.HttpContext.Response.WriteAsync("too many login attempts, please try again later");
+	};
+});
 
 var app = builder.Build();
 
@@ -50,7 +85,7 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseRateLimiter();
 app.MapControllers();
 
 app.Run();

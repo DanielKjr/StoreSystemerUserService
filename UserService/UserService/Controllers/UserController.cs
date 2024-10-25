@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using UserService.DTOs;
 using UserService.Interfaces;
 using UserService.Models;
 
 namespace UserService.Controllers
 {
+	
 	[Route("[controller]")]
 	public class UserController : ControllerBase
 	{
@@ -14,6 +16,7 @@ namespace UserService.Controllers
 			_userService = userService;
 		}
 
+		[EnableRateLimiting("fixedUsercreation")]
 		[HttpPost]
 		[Route("new")]
 		public async Task AddUser([FromBody] UserDTO user)
@@ -34,8 +37,9 @@ namespace UserService.Controllers
 		{
 			return await _userService.GetAllUsers();
 		}
-
-
+	
+			
+		[EnableRateLimiting("fixedLogin")]
 		[HttpPost]
 		[Route("login")]
 		public async Task<string> Login([FromBody] UserDTO user)

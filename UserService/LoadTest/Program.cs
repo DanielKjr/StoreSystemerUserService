@@ -10,8 +10,9 @@ class LoadTester
 
 	public static async Task Main(string[] args)
 	{
-		int numberOfRequests = 5000; // Number of requests to send
-		string url = "http://localhost:7000/User/login"; // Replace with your service URL
+		int numberOfRequests = 1000; // Number of requests to send
+		//should be other url this endpoint is rate limited now
+		string url = "http://localhost:7000/User/login"; 
 
 		await SendRequestsConcurrently(url, numberOfRequests);
 	}
@@ -34,7 +35,7 @@ class LoadTester
 	{
 		try
 		{
-			var jsonData = new { Username = "string", Password = "string" };// Add JSON data if needed
+			var jsonData = new { Username = "string", Password = "string" };
 			var jsonDatas = JsonConvert.SerializeObject(jsonData);
 			StringContent content = new StringContent(jsonDatas, System.Text.Encoding.UTF8, "application/json");
 			HttpResponseMessage response = await client.PostAsync(url, content);
