@@ -35,3 +35,9 @@ steps:
     configuration: '$(buildConfiguration)'
 
 
+- task: Docker@2
+  inputs:
+    containerRegistry: 'Docker'
+    repository: 'userservice'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
