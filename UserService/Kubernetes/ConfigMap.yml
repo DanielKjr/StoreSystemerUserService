@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gameserver-config
+data:
+  REGISTRYPORT: "5229"
+  LOOTBOXPORT: "5179"
+  USERSERVICEPORT: "7000"
+  secretPath: "/run/secrets/jwtSecret"
