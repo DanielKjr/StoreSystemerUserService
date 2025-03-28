@@ -1,0 +1,189 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gameserver
+spec:
+  type: LoadBalancer
+  ports:
+    - name: morder
+      port: 5000
+      protocol: UDP
+    - name: amongus
+      port: 5001
+      protocol: UDP
+    - name: europe
+      port: 5002
+      protocol: UDP
+  selector:
+    app: gameserver
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gameserver1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gameserver1
+  template:
+    metadata:
+      labels:
+        app: gameserver1
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: gameserver1
+          image: danielkjr/gameserver:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: REGISTRYPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameserver-config
+                  key: REGISTRYPORT
+            - name: LOOTBOXPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameserver-config
+                  key: LOOTBOXPORT
+            - name: USERSERVICEPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameserver-config
+                  key: USERSERVICEPORT
+            - name: UDP_PORT
+              value: "5000"  # Specific to gameserver1
+            - name: SERVER_NAME
+              value: "Mordor"  # Specific to gameserver1
+            - name: secretPath
+              valueFrom:
+                configMapKeyRef:
+                  name: gameserver-config
+                  key: secretPath
+          volumeMounts:
+            - name: jwt-secret
+              mountPath: /run/secrets
+          ports:
+            - containerPort: 5000
+              protocol: UDP
+      volumes:
+        - name: jwt-secret
+          secret:
+            secretName: jwt-secret
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gameserver2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gameserver2
+  template:
+    metadata:
+      labels:
+        app: gameserver2
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: gameserver2
+          image: danielkjr/gameserver:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: REGISTRYPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameserver-config
+                  key: REGISTRYPORT
+            - name: LOOTBOXPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameserver-config
+                  key: LOOTBOXPORT
+            - name: USERSERVICEPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameserver-config
+                  key: USERSERVICEPORT
+            - name: UDP_PORT
+              value: "5001"  # Specific to gameserver2
+            - name: SERVER_NAME
+              value: "AmongUs"  # Specific to gameserver2
+            - name: secretPath
+              valueFrom:
+                configMapKeyRef:
+                  name: gameserver-config
+                  key: secretPath
+          volumeMounts:
+            - name: jwt-secret
+              mountPath: /run/secrets
+          ports:
+            - containerPort: 5001
+              protocol: UDP
+      volumes:
+        - name: jwt-secret
+          secret:
+            secretName: jwt-secret
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gameserver3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gameserver3
+  template:
+    metadata:
+      labels:
+        app: gameserver3
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: gameserver3
+          image: danielkjr/gameserver:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: REGISTRYPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameserver-config
+                  key: REGISTRYPORT
+            - name: LOOTBOXPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameserver-config
+                  key: LOOTBOXPORT
+            - name: USERSERVICEPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameserver-config
+                  key: USERSERVICEPORT
+            - name: UDP_PORT
+              value: "5002"  # Specific to gameserver3
+            - name: SERVER_NAME
+              value: "Europe"  # Specific to gameserver3
+            - name: secretPath
+              valueFrom:
+                configMapKeyRef:
+                  name: gameserver-config
+                  key: secretPath
+          volumeMounts:
+            - name: jwt-secret
+              mountPath: /run/secrets
+          ports:
+            - containerPort: 5002
+              protocol: UDP
+      volumes:
+        - name: jwt-secret
+          secret:
+            secretName: jwt-secret

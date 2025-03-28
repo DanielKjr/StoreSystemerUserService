@@ -1,0 +1,38 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logservice-service
+spec:
+  ports:
+    - name: standard
+      port: 5289
+      targetPort: 8080
+  selector:
+    app: logservice
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logservice
+  template:
+    metadata:
+      labels:
+        app: logservice
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: logservice
+          image: danielkjr/logservice:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+
+

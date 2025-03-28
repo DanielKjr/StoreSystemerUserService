@@ -1,0 +1,10 @@
+resources:
+ - deploygameserver.yml
+ - deploygameserverregistry.yml
+ - deploylogservice.yml
+ - deploylootboxservice.yml
+ - deployrabbitmq.yml
+ - deployshopservice.yml
+ - deployuserservice.yml
+ - secret.yml
+ - ConfigMap.yml

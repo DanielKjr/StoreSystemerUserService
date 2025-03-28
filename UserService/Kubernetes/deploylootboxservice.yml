@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lootboxservice
+spec:
+  ports:
+    - name: standard
+      port: 5179
+      targetPort: 8080
+  selector:
+    app: lootboxservice
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lootboxservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lootboxservice
+  template:
+    metadata:
+      labels:
+        app: lootboxservice
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: lootboxservice
+          image: danielkjr/lootboxservice:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080

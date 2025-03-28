@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: userservice
+spec:
+  ports:
+    - name: http
+      port: 7000
+      targetPort: 8080
+    - name: admin
+      port: 7001
+      targetPort: 8081
+  selector:
+    app: userservice
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userservice
+  template:
+    metadata:
+      labels:
+        app: userservice
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: userservice
+          image: danielkjr/userservice:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: secretPath
+              value: /run/secrets/jwtSecret
+            - name: DatabaseFailChance
+              value: "0"
+          volumeMounts:
+            - name: jwt-secret
+              mountPath: /run/secrets
+          ports:
+            - containerPort: 8080
+            - containerPort: 8081
+          readinessProbe:
+            httpGet:
+              path: /healthz/readiness
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: jwt-secret
+          secret:
+            secretName: jwt-secret
+
+---
