@@ -1,0 +1,10 @@
+jobs:
+  - job: Deploy
+    pool:
+      name: Kubedeployment
+    steps:
+      - script: |
+          docker pull danielkjr/userservice:$(Build.SourceVersion)
+          kubectl set image deployment/userservice userservice=danielkjr/userservice:$(Build.SourceVersion)
+          kubectl rollout restart deployment userservice
+        displayName: 'Deploy to Kubernetes'
